@@ -1,11 +1,30 @@
-const divs = document.querySelectorAll('div');
+const slider = document.querySelector('.items');
+let isDown = false;
+let startX;
+let scrollLeft;
 
-function logText(e) {
-	console.log(this.classList.value);
-	e.stopPropagation();
-}
+slider.addEventListener('mousedown', (e)=> {
+	isDown = true;
+	slider.classList.toggle('active');
+	startX = e.pageX - slider.offsetLeft;
+	scrollLeft = slider.scrollLeft;
+	console.log(startX);
+});
 
-divs.forEach(div=> div.addEventListener('click', logText, {
-	capture: false,
-	once: true
-}));
+slider.addEventListener('mouseleave', ()=> {
+	isDown = false;
+	slider.classList.remove('active');
+});
+
+slider.addEventListener('mouseup', ()=> {
+	isDown = false;
+	slider.classList.remove('active');
+});
+
+slider.addEventListener('mousemove', (e)=> {
+	if(!isDown) return; //stop function form running
+	e.preventDefault();
+	const x = e.pageX - slider.offsetLeft;
+	const walk = (x - startX)*3;
+	slider.scrollLeft = scrollLeft - walk;
+});
